@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Harley USA · Mission Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#060912;--surface:#0d1525;--surface2:#111a2e;--surface3:#162038;
+  --cyan:#00d4ff;--purple:#7c5af6;--green:#00e5a0;--orange:#f59e0b;--red:#ff4d6d;
+  --text:#e2e8f0;--muted:#64748b;--subtle:#1e2d47;--border:rgba(0,212,255,.12);
+}
+html{background:var(--bg)}
+body{font-family:'Manrope',sans-serif;background:radial-gradient(ellipse 120% 50% at 50% -5%,rgba(0,212,255,.05) 0%,var(--bg) 55%);color:var(--text);font-size:13px;line-height:1.6;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.5}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:12px 32px;border-bottom:1px solid var(--border);background:rgba(6,9,18,.85);backdrop-filter:blur(16px);position:sticky;top:0;z-index:100}
+.logo{font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;letter-spacing:.06em;color:var(--cyan);display:flex;align-items:center;gap:8px}
+.ldot{width:7px;height:7px;background:var(--cyan);border-radius:50%;box-shadow:0 0 8px var(--cyan);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.tabs{display:flex;gap:2px}
+.tabs button{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;padding:6px 13px;border-radius:5px;transition:all .18s}
+.tabs button:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.tabs button.on{color:var(--cyan);background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.18)}
+.live{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);display:flex;align-items:center;gap:5px}
+.livdot{width:5px;height:5px;background:var(--green);border-radius:50%;box-shadow:0 0 5px var(--green);animation:blink 1.5s infinite}
+
+/* PAGES */
+.pg{display:none;padding:32px 40px;max-width:1240px;margin:0 auto;animation:up .3s ease}
+.pg.on{display:block}
+@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* TYPOGRAPHY */
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:8px}
+.eyebrow::before{content:'// '}
+.pg-title{font-family:'Chakra Petch',sans-serif;font-size:26px;font-weight:700;margin-bottom:5px;background:linear-gradient(130deg,#e2e8f0,var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.pg-sub{color:var(--muted);font-size:12px;margin-bottom:26px}
+
+/* CARD */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,212,255,.25),transparent)}
+.card-title{font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:600;margin-bottom:12px;letter-spacing:.03em}
+
+/* CHIP */
+.chip{font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 7px;border-radius:3px;letter-spacing:.04em;display:inline-block}
+.chip.crit{background:rgba(255,77,109,.18);color:var(--red);border:1px solid rgba(255,77,109,.28)}
+.chip.warn{background:rgba(245,158,11,.13);color:var(--orange);border:1px solid rgba(245,158,11,.22)}
+.chip.ok{background:rgba(0,229,160,.1);color:var(--green);border:1px solid rgba(0,229,160,.22)}
+.chip.info{background:rgba(0,212,255,.09);color:var(--cyan);border:1px solid rgba(0,212,255,.18)}
+.chip.gate{background:rgba(124,90,246,.14);color:var(--purple);border:1px solid rgba(124,90,246,.24)}
+.chip.bl{background:rgba(100,116,139,.1);color:var(--muted);border:1px solid rgba(100,116,139,.18)}
+
+/* HERO */
+.hero{display:grid;grid-template-columns:1fr auto;gap:28px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:30px 34px;margin-bottom:22px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;right:-80px;top:-80px;width:360px;height:360px;background:radial-gradient(circle,rgba(124,90,246,.07) 0%,transparent 65%);pointer-events:none}
+.hero-title{font-family:'Chakra Petch',sans-serif;font-size:30px;font-weight:700;line-height:1.1;margin-bottom:5px}
+.hero-title em{font-style:normal;color:var(--cyan)}
+.hero-sub{color:var(--muted);font-size:12px;margin-bottom:18px}
+.hero-note{font-size:11px;color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:10px 14px;background:rgba(255,255,255,.018);max-width:540px;font-style:italic;line-height:1.65}
+.cd-num{font-family:'Chakra Petch',monospace;font-size:68px;font-weight:700;line-height:1;color:var(--cyan);text-shadow:0 0 28px rgba(0,212,255,.35);text-align:right}
+.cd-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:right;margin-top:3px}
+.cd-date{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--cyan);text-align:right;margin-top:5px;opacity:.65}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin-bottom:22px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center}
+.snum{font-family:'Chakra Petch',monospace;font-size:24px;font-weight:700;margin-bottom:3px}
+.slbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+
+/* BLOCKERS */
+.blockers{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:24px}
+.blk{border-radius:10px;padding:16px 18px;border:1px solid transparent;position:relative;overflow:hidden}
+.blk.crit{background:rgba(255,77,109,.055);border-color:rgba(255,77,109,.22)}
+.blk.crit::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--red)}
+.blk.warn{background:rgba(245,158,11,.045);border-color:rgba(245,158,11,.18)}
+.blk.warn::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--orange)}
+.blk h3{font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:600;margin-bottom:5px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.blk p{font-size:12px;color:#94a3b8;line-height:1.65}
+
+/* ACTIONS */
+.actions{display:grid;gap:7px;margin-bottom:26px}
+.action{display:grid;grid-template-columns:38px 1fr auto;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 16px;transition:border-color .18s}
+.action:hover{border-color:rgba(0,212,255,.22)}
+.anum{font-family:'Chakra Petch',monospace;font-size:20px;font-weight:700;color:var(--red);text-align:center}
+.atxt strong{font-size:13px;font-weight:600;display:block;margin-bottom:1px}
+.atxt span{font-size:11px;color:var(--muted)}
+.aowner{font-family:'JetBrains Mono',monospace;font-size:10px;background:rgba(0,212,255,.07);color:var(--cyan);padding:3px 9px;border-radius:4px;border:1px solid rgba(0,212,255,.18);white-space:nowrap}
+
+/* FLOW */
+.flow{display:flex;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px 26px;margin-bottom:18px;overflow-x:auto;gap:0}
+.fstep{text-align:center;flex:1;min-width:90px}
+.ficon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;margin:0 auto 8px;border:1px solid var(--border)}
+.fname{font-family:'Chakra Petch',sans-serif;font-size:10px;font-weight:600;margin-bottom:2px}
+.fsub{font-size:10px;color:var(--muted);line-height:1.4}
+.farr{font-size:16px;color:var(--border);flex-shrink:0;padding:0 4px;margin-bottom:18px}
+
+/* SCOPE */
+.scope{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:22px}
+.sccard{background:var(--surface);border-radius:10px;padding:16px 18px}
+.sccard.in{border:1px solid rgba(0,229,160,.18)}
+.sccard.out{border:1px solid rgba(100,116,139,.12)}
+.sclbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+.sci{font-size:12px;padding:5px 0;border-bottom:1px solid var(--subtle);display:flex;gap:7px;align-items:flex-start}
+.sci:last-child{border-bottom:none}
+.sci.dim{color:var(--muted)}
+
+/* QUALIPHY */
+.apigrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.apif{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;gap:10px;align-items:flex-start}
+.apif .ico{font-size:16px;flex-shrink:0;margin-top:1px}
+.afttl{font-size:12px;font-weight:600;margin-bottom:2px}
+.afsub{font-size:11px;color:var(--muted);line-height:1.6}
+.verdict{border-radius:12px;padding:18px 22px;background:rgba(0,229,160,.045);border:1px solid rgba(0,229,160,.18);display:flex;gap:16px;align-items:flex-start;margin-bottom:22px}
+.vscore{font-family:'Chakra Petch',monospace;font-size:44px;font-weight:700;color:var(--green);text-shadow:0 0 18px rgba(0,229,160,.28);line-height:1;flex-shrink:0}
+.vtxt h3{font-family:'Chakra Petch',sans-serif;font-size:15px;color:var(--green);margin-bottom:5px}
+.vtxt p{font-size:12px;color:#94a3b8;line-height:1.7}
+.code{background:#060d1b;border:1px solid var(--border);border-radius:8px;padding:14px 18px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#94a3b8;margin-top:12px;overflow-x:auto;line-height:1.8}
+.code .k{color:var(--cyan)}.code .s{color:var(--green)}.code .n{color:var(--orange)}.code .c{color:#3d5068}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.opt{border-radius:10px;padding:16px 18px;border:1px solid var(--border);background:var(--surface2)}
+.opt.rec{border-color:rgba(0,229,160,.25);background:rgba(0,229,160,.035)}
+.optlbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.09em;text-transform:uppercase;margin-bottom:6px}
+.opt h4{font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:600;margin-bottom:7px}
+.opt ul{list-style:none;display:grid;gap:4px}
+.opt li{font-size:11px;color:var(--muted);padding-left:13px;position:relative;line-height:1.5}
+.opt li::before{content:'→';position:absolute;left:0;color:var(--cyan);font-size:9px;top:2px}
+
+/* ── GANTT ── */
+.gw{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px 24px;overflow-x:auto}
+.gcal{min-width:900px}
+/* day columns: 24 total May9–Jun1 */
+.ghead{display:flex;margin-left:186px;margin-bottom:6px}
+.gday{flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:8.5px;color:var(--muted);line-height:1.3;border-left:1px solid rgba(255,255,255,.04);padding-top:2px}
+.gday.wk{color:rgba(100,116,139,.4)}/* weekend label */
+.gday.today{color:var(--cyan)}
+.ggroup{margin-bottom:14px}
+.gglbl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;padding-left:186px;display:flex;align-items:center;gap:7px}
+.gglbl::after{content:'';flex:1;height:1px;background:var(--subtle)}
+.grow{display:flex;align-items:center;margin-bottom:4px;position:relative}
+.glbl{width:186px;flex-shrink:0;font-size:10.5px;color:var(--text);padding-right:12px;text-align:right;line-height:1.25}
+.glbl small{font-family:'JetBrains Mono',monospace;font-size:8.5px;color:var(--muted);display:block}
+.gtrack{flex:1;position:relative;height:20px}
+/* weekend shading behind bars */
+.gwkshade{position:absolute;top:0;bottom:0;background:rgba(100,116,139,.07);z-index:0}
+.bar{position:absolute;height:13px;top:3.5px;border-radius:3px;z-index:1;cursor:default;transition:filter .15s}
+.bar:hover{filter:brightness(1.3)}
+.bar.urgent{background:linear-gradient(90deg,#c8341f,#ff6b6b)}
+.bar.infra{background:linear-gradient(90deg,#1e40af,#3b82f6)}
+.bar.q{background:linear-gradient(90deg,#0d6860,#14b8a6)}
+.bar.wp{background:linear-gradient(90deg,#5b21b6,#a78bfa)}
+.bar.form{background:linear-gradient(90deg,#92400e,#f59e0b)}
+.bar.pay{background:linear-gradient(90deg,#14532d,#22c55e)}
+.bar.qa{background:linear-gradient(90deg,#881337,#f43f5e)}
+.bar.go{background:linear-gradient(90deg,#064e3b,#10b981)}
+.bar.ms{background:linear-gradient(90deg,#92400e,#fbbf24);box-shadow:0 0 7px rgba(245,158,11,.35)}
+/* vertical markers */
+.vmark{position:absolute;top:0;bottom:0;width:2px;z-index:3;pointer-events:none}
+.vmark.target{background:rgba(0,229,160,.5);box-shadow:0 0 6px rgba(0,229,160,.3)}
+.vmark.today-v{background:rgba(0,212,255,.5);box-shadow:0 0 6px rgba(0,212,255,.3)}
+.vmark.launch{background:rgba(255,77,109,.5);box-shadow:0 0 6px rgba(255,77,109,.3)}
+/* buffer zone overlay */
+.buf-overlay{position:absolute;top:0;bottom:0;background:rgba(0,229,160,.025);border-left:1px dashed rgba(0,229,160,.2);z-index:1}
+/* legend */
+.gleg{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;padding-top:12px;border-top:1px solid var(--border)}
+.gli{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace}
+.gldot{width:18px;height:7px;border-radius:2px}
+/* date summary row */
+.gantt-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.gs-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 16px;text-align:center}
+.gs-date{font-family:'Chakra Petch',monospace;font-size:16px;font-weight:700;margin-bottom:2px}
+.gs-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+/* RISK */
+.rt{width:100%;border-collapse:collapse}
+.rt th{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);padding:9px 12px;text-align:left;border-bottom:1px solid var(--border)}
+.rt td{padding:11px 12px;font-size:12px;border-bottom:1px solid rgba(255,255,255,.035);vertical-align:top}
+.rt tr:last-child td{border-bottom:none}
+.rt tr:hover td{background:rgba(255,255,255,.018)}
+.rid{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted)}
+.pp{font-family:'JetBrains Mono',monospace;font-size:9px;padding:2px 7px;border-radius:3px;display:inline-block}
+.ph{background:rgba(255,77,109,.13);color:var(--red)}
+.pm{background:rgba(245,158,11,.1);color:var(--orange)}
+.pl{background:rgba(0,229,160,.09);color:var(--green)}
+.pvh{background:rgba(255,77,109,.22);color:var(--red)}
+
+/* WORKSTREAMS */
+.wsgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.ws{background:var(--surface);border:1px solid var(--border);border-radius:11px;overflow:hidden;transition:border-color .18s}
+.ws:hover{border-color:rgba(0,212,255,.18)}
+.wsstripe{height:3px}
+.wshead{padding:14px 18px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none}
+.wshead h3{font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:600}
+.wsmeta{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--muted);margin-top:2px}
+.wsbody{display:none;padding:0 18px 14px}
+.ws.open .wsbody{display:block}
+.wstask{display:flex;gap:8px;padding:6px 0;border-bottom:1px solid var(--subtle);align-items:flex-start}
+.wstask:last-child{border-bottom:none}
+.wtxt{flex:1;font-size:11.5px}
+.wtime{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--muted);white-space:nowrap;margin-left:4px}
+.chev{transition:transform .22s;color:var(--muted)}
+.ws.open .chev{transform:rotate(180deg)}
+
+/* CHECKLIST */
+.clgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 36px}
+.clcat{margin-bottom:18px}
+.clcat h3{font-family:'Chakra Petch',sans-serif;font-size:11px;font-weight:600;color:var(--cyan);margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border)}
+.cli{display:flex;align-items:flex-start;gap:8px;padding:5px 0;cursor:pointer}
+.cli input{margin-top:3px;accent-color:var(--cyan);cursor:pointer;flex-shrink:0}
+.cli label{font-size:11.5px;cursor:pointer;line-height:1.5}
+.cli input:checked+label{color:var(--muted);text-decoration:line-through}
+.pbwrap{margin-bottom:22px}
+.pblbl{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:5px;display:flex;justify-content:space-between}
+.pbar{height:3px;background:var(--subtle);border-radius:2px;overflow:hidden}
+.pfill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--green));border-radius:2px;transition:width .4s}
+
+/* SWOT */
+.swot{display:grid;grid-template-columns:1fr 1fr;gap:0;border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+.swq{padding:20px 22px}
+.swq h3{font-family:'Chakra Petch',sans-serif;font-size:12px;font-weight:700;margin-bottom:10px}
+.swq ul{list-style:none;display:grid;gap:5px}
+.swq li{font-size:11px;color:var(--muted);padding-left:13px;position:relative;line-height:1.5}
+.swq li::before{content:'';position:absolute;left:0;top:7px;width:4px;height:4px;border-radius:50%}
+.swq.S{background:rgba(0,229,160,.035);border-right:1px solid var(--border);border-bottom:1px solid var(--border)}.swq.S h3{color:var(--green)}.swq.S li::before{background:var(--green)}
+.swq.W{background:rgba(255,77,109,.035);border-bottom:1px solid var(--border)}.swq.W h3{color:var(--red)}.swq.W li::before{background:var(--red)}
+.swq.O{background:rgba(0,212,255,.03);border-right:1px solid var(--border)}.swq.O h3{color:var(--cyan)}.swq.O li::before{background:var(--cyan)}
+.swq.T{background:rgba(245,158,11,.03)}.swq.T h3{color:var(--orange)}.swq.T li::before{background:var(--orange)}
+
+hr.div{border:none;border-top:1px solid var(--border);margin:22px 0}
+.mb22{margin-bottom:22px}.mb14{margin-bottom:14px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><div class="ldot"></div>10QBIT // HARLEY USA</div>
+  <div class="tabs">
+    <button class="on" onclick="go('overview',this)">Overview</button>
+    <button onclick="go('qualiphy',this)">Qualiphy API</button>
+    <button onclick="go('gantt',this)">Timeline</button>
+    <button onclick="go('risks',this)">Risks</button>
+    <button onclick="go('ws',this)">Workstreams</button>
+    <button onclick="go('checklist',this)">Go-Live</button>
+    <button onclick="go('swot',this)">SWOT</button>
+  </div>
+  <div class="live"><div class="livdot"></div>LIVE · MAY 2026</div>
+</nav>
+
+<!-- ══════════════════ OVERVIEW ══════════════════ -->
+<div class="pg on" id="overview">
+  <div class="hero">
+    <div>
+      <div class="eyebrow">Mission Brief</div>
+      <div class="hero-title">Harley Weight Loss<br><em>USA Launch</em></div>
+      <div class="hero-sub">10QBIT Tech Delivery &nbsp;·&nbsp; PM: Subarshan &nbsp;·&nbsp; Tech Lead: Dulan</div>
+      <div class="hero-note">⚑ Scope boundary: Legal entity setup, clinic licensing & telehealth regulatory advice = Warren's responsibility. 10QBIT owns technology only. Consultation form content = reviewed & built by 10QBIT based on competitor research.</div>
+    </div>
+    <div>
+      <div class="cd-num" id="cd">22</div>
+      <div class="cd-lbl">Days to Launch</div>
+      <div class="cd-date">June 1, 2026 (Monday)</div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="snum" style="color:var(--cyan)" id="stat-days">—</div><div class="slbl">Days Remaining</div></div>
+    <div class="stat"><div class="snum" style="color:var(--green)">May 25</div><div class="slbl">System Complete</div></div>
+    <div class="stat"><div class="snum" style="color:var(--orange)">5</div><div class="slbl">Critical Blockers</div></div>
+    <div class="stat"><div class="snum" style="color:var(--purple)">9</div><div class="slbl">Workstreams</div></div>
+    <div class="stat"><div class="snum" style="color:var(--green)">LOW</div><div class="slbl">Qualiphy Complexity</div></div>
+  </div>
+
+  <!-- FLOW -->
+  <div class="eyebrow mb14">Patient journey</div>
+  <div class="flow">
+    <div class="fstep"><div class="ficon" style="background:rgba(0,212,255,.07);border-color:rgba(0,212,255,.18)">🌐</div><div class="fname">Patient Lands</div><div class="fsub">Harley US site</div></div>
+    <div class="farr">→</div>
+    <div class="fstep"><div class="ficon" style="background:rgba(124,90,246,.07);border-color:rgba(124,90,246,.22)">📋</div><div class="fname">Custom Form</div><div class="fsub">State check · Consent · Q&amp;A</div></div>
+    <div class="farr">→</div>
+    <div class="fstep"><div class="ficon" style="background:rgba(22,101,52,.12);border-color:rgba(34,197,94,.22)">💳</div><div class="fname">Payment</div><div class="fsub">Stripe US · USD</div></div>
+    <div class="farr">→</div>
+    <div class="fstep"><div class="ficon" style="background:rgba(15,118,110,.1);border-color:rgba(20,184,166,.22)">⚡</div><div class="fname">→ Qualiphy API</div><div class="fsub">Auto-push on payment</div></div>
+    <div class="farr">→</div>
+    <div class="fstep"><div class="ficon" style="background:rgba(245,158,11,.07);border-color:rgba(245,158,11,.22)">👨‍⚕️</div><div class="fname">Clinical Review</div><div class="fsub">Qualiphy providers</div></div>
+    <div class="farr">→</div>
+    <div class="fstep"><div class="ficon" style="background:rgba(0,229,160,.06);border-color:rgba(0,229,160,.22)">🚚</div><div class="fname">Approved + Dispatch</div><div class="fsub">Qualiphy pharmacy</div></div>
+  </div>
+  <div style="background:rgba(0,229,160,.05);border:1px solid rgba(0,229,160,.15);border-radius:7px;padding:9px 14px;font-size:11px;color:#94a3b8;margin-bottom:22px;text-align:center">✦ Steps 4–6 fully owned by Qualiphy. No internal admin/practitioner system required on our side.</div>
+
+  <!-- BLOCKERS -->
+  <div class="eyebrow mb14">Critical blockers — act now</div>
+  <div class="blockers mb22">
+    <div class="blk crit"><h3><span class="chip crit">CRITICAL</span>Qualiphy API access — today</h3><p>Dulan signs up at app.qualiphy.me (free), gets API key from Settings → API, runs /exam_list + a test invite. State = "TE", name = "Test Approve". Should take 2 hours. This is the #1 blocker.</p></div>
+    <div class="blk crit"><h3><span class="chip crit">CRITICAL</span>Qualiphy commercial plan</h3><p>Free account = sandbox only. Production requires a paid plan. Sanj contacts Qualiphy sales today. Target: signed by May 14 (Wed). Dev can proceed in sandbox while negotiations happen.</p></div>
+    <div class="blk crit"><h3><span class="chip crit">CRITICAL</span>HIPAA-compliant hosting</h3><p>UK infrastructure is not HIPAA-eligible. US patient data cannot flow until a US host is live (AWS us-east-1 or Azure East US) and a Business Associate Agreement (BAA) is signed. Dulan starts this Monday May 11.</p></div>
+    <div class="blk crit"><h3><span class="chip crit">CRITICAL</span>Stripe US KYC</h3><p>Takes 3–5 business days. Submit today. 30-minute task. Suba handles — not Dulan, so no weekend dependency. Every day of delay compresses the payment integration window.</p></div>
+    <div class="blk warn" style="grid-column:1/-1"><h3><span class="chip warn">HIGH</span>Custom consultation form — 10QBIT builds independently, no input from Warren</h3><p>Our custom form needs to be redesigned for the US market. Suba researches US GLP-1 competitor flows (Ro, Hims/Hers, Found, Henry Meds, Sequence) starting Monday to build the question spec. Dulan implements from Wed May 13. Warren reviews the finished form before UAT — but he doesn't build it.</p></div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="eyebrow mb14">Immediate actions — today &amp; Monday</div>
+  <div class="actions">
+    <div class="action"><div class="anum">1</div><div class="atxt"><strong>Dulan: sign up to app.qualiphy.me → API key → run /exam_list + test invite</strong><span>Free signup. Settings → API key. Set state "TE", name "Test Approve". Validate webhook fires. 2 hours.</span></div><div class="aowner">Dulan — Mon</div></div>
+    <div class="action"><div class="anum">2</div><div class="atxt"><strong>Submit Stripe US business account KYC documentation</strong><span>30-minute task. Suba can do this today (Sunday). 3–5 business day processing window starts now.</span></div><div class="aowner">Suba — Today</div></div>
+    <div class="action"><div class="anum">3</div><div class="atxt"><strong>Sanj: contact Qualiphy sales for commercial/production plan — target May 14</strong><span>Dev continues in sandbox. Production access needed by May 18 at latest for live testing.</span></div><div class="aowner">Sanj — Mon</div></div>
+    <div class="action"><div class="anum">4</div><div class="atxt"><strong>Dulan: select + provision HIPAA-compliant US hosting — initiate BAA</strong><span>AWS us-east-1 or Azure East US. BAA can be executed same-day with these providers. Must be signed before any real patient data flows.</span></div><div class="aowner">Dulan — Mon</div></div>
+    <div class="action"><div class="anum">5</div><div class="atxt"><strong>Suba: begin competitor form research — Ro, Hims/Hers, Found, Henry Meds, Sequence</strong><span>Document standard US GLP-1 question set. Gap-analyse vs our UK custom form. Spec ready for Dulan by Wed May 13.</span></div><div class="aowner">Suba — Mon</div></div>
+    <div class="action"><div class="anum">6</div><div class="atxt"><strong>Schedule project kickoff — Sanj, Warren, Dulan, all leads</strong><span>Lock scope, RACI, 24hr sign-off SLA, MVP contingency definition. One meeting, Monday morning.</span></div><div class="aowner">Suba — Mon</div></div>
+  </div>
+
+  <!-- SCOPE -->
+  <hr class="div">
+  <div class="eyebrow mb14">Scope</div>
+  <div class="scope">
+    <div class="sccard in">
+      <div class="sclbl" style="color:var(--green)">✓ In scope — 10QBIT delivers</div>
+      <div class="sci"><span>🖥</span>Existing site adapted to US HIPAA hosting environment</div>
+      <div class="sci"><span>📋</span>Custom consultation form — rebuilt by 10QBIT via competitor research</div>
+      <div class="sci"><span>⚡</span>Qualiphy API integration — /exam_invite + webhooks</div>
+      <div class="sci"><span>💳</span>Stripe US — USD, webhooks, refunds</div>
+      <div class="sci"><span>🗺</span>State geo-restriction — blocks patients in unsupported states</div>
+      <div class="sci"><span>🔒</span>HIPAA-compliant infrastructure + data handling</div>
+      <div class="sci"><span>🧪</span>Full QA, security scan, vulnerability test, UAT, go-live</div>
+      <div class="sci"><span>🛟</span>48-hr post-launch hypercare (Dulan standby)</div>
+    </div>
+    <div class="sccard out">
+      <div class="sclbl" style="color:var(--muted)">✗ Out of scope — Warren handles</div>
+      <div class="sci dim"><span>⚖️</span>US legal entity + clinic registration</div>
+      <div class="sci dim"><span>📜</span>Telehealth licensing + regulatory legal advice</div>
+      <div class="sci dim"><span>👨‍⚕️</span>Clinical decisions — medication protocols, dosage</div>
+      <div class="sci dim"><span>🤝</span>Qualiphy commercial agreement + pricing</div>
+      <div class="sci dim"><span>🏥</span>US pharmacy + cold chain (Qualiphy handles)</div>
+      <div class="sci dim"><span>📝</span>Legal page copy — Warren's counsel provides text, 10QBIT implements</div>
+      <div class="sci dim"><span>📢</span>Marketing, SEO, paid media</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ QUALIPHY ══════════════════ -->
+<div class="pg" id="qualiphy">
+  <div class="eyebrow">Integration Assessment</div>
+  <div class="pg-title">Qualiphy API Review</div>
+  <div class="pg-sub">Reviewed from api-docs.qualiphy.me — complexity, approach, and what Dulan actually needs to build.</div>
+
+  <div class="verdict mb22">
+    <div class="vscore">LOW</div>
+    <div class="vtxt">
+      <h3>Complexity: Low — This is very achievable.</h3>
+      <p>Clean REST API. API key in JSON body — no OAuth, no token refresh, zero auth complexity. Core integration is one POST endpoint (<code style="color:var(--cyan)">POST /exam_invite</code>) plus a webhook handler. They have a built-in test mode — Dulan can run the full end-to-end loop in sandbox using state <code style="color:var(--cyan)">"TE"</code> without touching real patients. They also have a WordPress/WooCommerce plugin called <strong style="color:var(--green)">Quidget</strong> — but since our form is custom-built, we'll use the API directly. Dulan can have a working prototype in sandbox within 2 days of getting API access (Monday).</p>
+    </div>
+  </div>
+
+  <div class="eyebrow mb14">What the API gives us</div>
+  <div class="apigrid mb22">
+    <div class="apif"><div class="ico">🔑</div><div><div class="afttl">Simple Auth</div><div class="afsub">API key in JSON body. No OAuth, no token expiry, no refresh flows. One env var, done.</div></div></div>
+    <div class="apif"><div class="ico">⚡</div><div><div class="afttl">One Core Endpoint</div><div class="afsub"><code style="color:var(--cyan)">POST /api/exam_invite</code> — send patient data, receive <code style="color:var(--cyan)">meeting_url</code> + <code style="color:var(--cyan)">patient_exam_id</code>. That's the integration.</div></div></div>
+    <div class="apif"><div class="ico">🧪</div><div><div class="afttl">Built-in Test Mode</div><div class="afsub">Set <code style="color:var(--cyan)">state:"TE"</code> + patient name "Test Approve" → approved. "Test Reject" → rejected. Full loop, no real patients.</div></div></div>
+    <div class="apif"><div class="ico">🔔</div><div><div class="afttl">Webhooks</div><div class="afsub">Pass <code style="color:var(--cyan)">webhook_url</code> in the invite. Qualiphy POSTs approval/rejection/dispatch status back to us. Standard pattern.</div></div></div>
+    <div class="apif"><div class="ico">💊</div><div><div class="afttl">GLP-1 Exams Already Exist</div><div class="afsub">Semaglutide exam IDs visible in sample data (e.g. 2769, 3702). Dulan runs <code style="color:var(--cyan)">/exam_list</code> to get our clinic's specific IDs.</div></div></div>
+    <div class="apif"><div class="ico">🗺</div><div><div class="afttl">State Routing Built-in</div><div class="afsub">Pass <code style="color:var(--cyan)">state</code> in the invite. Qualiphy routes to a licensed provider for that state. We build geo-restriction on our form, Qualiphy handles the rest.</div></div></div>
+    <div class="apif"><div class="ico">📋</div><div><div class="afttl">Pre-fill Patient Answers</div><div class="afsub">Our custom form data can pre-populate Qualiphy's exam. Patient doesn't re-enter info — cleaner UX, lower drop-off.</div></div></div>
+    <div class="apif"><div class="ico">📁</div><div><div class="afttl">Attachment Upload</div><div class="afsub"><code style="color:var(--cyan)">/exam_upload_attachment</code> supports ID + lab uploads if required by the exam type.</div></div></div>
+  </div>
+
+  <div class="eyebrow mb14">The integration Dulan needs to build — custom form path</div>
+  <div class="card mb22">
+    <div class="card-title">Custom form → Qualiphy → Webhook handler</div>
+    <div class="code">
+<span class="c">// STEP 1: Patient completes custom form + payment confirmed (Stripe webhook)</span>
+<span class="k">POST</span> https://api.qualiphy.me/api/exam_invite
+{
+  <span class="s">"api_key"</span>: <span class="s">"YOUR_KEY"</span>,           <span class="c">// server-side only — never in client-side code</span>
+  <span class="s">"exams"</span>: [<span class="n">2769</span>],                <span class="c">// GLP-1 exam ID from /exam_list for our account</span>
+  <span class="s">"first_name"</span>: <span class="s">"Jane"</span>,
+  <span class="s">"last_name"</span>: <span class="s">"Smith"</span>,
+  <span class="s">"email"</span>: <span class="s">"jane@example.com"</span>,
+  <span class="s">"dob"</span>: <span class="s">"1985-03-14"</span>,
+  <span class="s">"phone_number"</span>: <span class="s">"+15555550100"</span>,
+  <span class="s">"state"</span>: <span class="s">"CA"</span>,                   <span class="c">// captured from our custom form</span>
+  <span class="s">"tele_state"</span>: <span class="s">"CA"</span>,
+  <span class="s">"webhook_url"</span>: <span class="s">"https://harleyusa.com/api/qualiphy-webhook"</span>
+}
+
+<span class="c">// STEP 2: Immediate response</span>
+{ <span class="s">"meeting_url"</span>: <span class="s">"..."</span>, <span class="s">"patient_exam_id"</span>: <span class="n">12345</span> }   <span class="c">// show meeting_url to patient if applicable</span>
+
+<span class="c">// STEP 3: Webhook fires when provider reviews (seconds–hours in prod)</span>
+<span class="k">POST</span> /api/qualiphy-webhook
+{ <span class="s">"status"</span>: <span class="s">"approved"</span> | <span class="s">"rejected"</span>, <span class="s">"patient_exam_id"</span>: <span class="n">12345</span> }
+<span class="c">// → Update order record → Send confirmation/rejection email to patient</span>
+
+<span class="c">// TEST MODE — safe to run right now</span>
+<span class="s">"state"</span>: <span class="s">"TE"</span>, <span class="s">"tele_state"</span>: <span class="s">"TE"</span>, <span class="s">"first_name"</span>: <span class="s">"Test"</span>, <span class="s">"last_name"</span>: <span class="s">"Approve"</span></div>
+  </div>
+
+  <div class="eyebrow mb14">Custom form — 10QBIT builds independently</div>
+  <div class="card">
+    <div class="card-title">Competitor research approach — no dependency on Warren for form content</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:6px">
+      <div style="background:var(--surface2);border-radius:8px;padding:13px 15px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--cyan);letter-spacing:.08em;margin-bottom:7px">// RESEARCH · May 11–13</div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.75">Suba reviews:<br>• Ro Health<br>• Hims/Hers<br>• Found<br>• Henry Meds<br>• Sequence<br><br>Output: standard US GLP-1 question set documented.</div>
+      </div>
+      <div style="background:var(--surface2);border-radius:8px;padding:13px 15px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--purple);letter-spacing:.08em;margin-bottom:7px">// GAP ANALYSIS · May 13–15</div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.75">Compare UK custom form vs competitor standard:<br>• Missing questions<br>• UK-specific to remove<br>• State selection required<br>• US informed consent<br>• Medication eligibility logic</div>
+      </div>
+      <div style="background:var(--surface2);border-radius:8px;padding:13px 15px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--green);letter-spacing:.08em;margin-bottom:7px">// BUILD · May 15–22</div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.75">Dulan implements:<br>• Updated question set<br>• State select + geo-block<br>• Consent capture<br>• Field mapping → Qualiphy payload<br>• Internal sign-off May 22</div>
+      </div>
+    </div>
+    <div style="margin-top:12px;padding:10px 14px;background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.15);border-radius:7px;font-size:11px;color:#94a3b8">
+      ⚠ Warren reviews the finished form before UAT — but he is not involved in building it. His sign-off is a gate before go-live, not a dependency during development.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ GANTT ══════════════════ -->
+<div class="pg" id="gantt">
+  <div class="eyebrow">Delivery Timeline</div>
+  <div class="pg-title">Working-Day Sprint — May 11 to June 1</div>
+  <div class="pg-sub">Dulan works Mon–Fri only. All Dulan tasks are scheduled around weekends. System complete: May 25 (Mon). Buffer + QA week: May 26–June 1.</div>
+
+  <div class="gantt-summary">
+    <div class="gs-card" style="border:1px solid rgba(255,77,109,.2)"><div class="gs-date" style="color:var(--red)">May 11</div><div class="gs-lbl">Dulan WD1 — All urgent tasks begin</div></div>
+    <div class="gs-card" style="border:1px solid rgba(0,229,160,.2)"><div class="gs-date" style="color:var(--green)">May 25</div><div class="gs-lbl">System complete target — all dev done</div></div>
+    <div class="gs-card" style="border:1px solid rgba(0,212,255,.2)"><div class="gs-date" style="color:var(--cyan)">May 26 – Jun 1</div><div class="gs-lbl">Buffer week — QA · UAT · Go-Live</div></div>
+  </div>
+
+  <div class="gw">
+    <div class="gcal">
+
+      <!-- DAY HEADERS -->
+      <!-- 24 days: May9(D0,Sat) … Jun1(D23,Mon). Weekend days: 0,1,7,8,14,15,21,22 -->
+      <div class="ghead" id="dayheaders"></div>
+
+      <!-- GOVERNANCE -->
+      <div class="ggroup">
+        <div class="gglbl">Governance</div>
+        <div class="grow"><div class="glbl">Kickoff + scope<small>Suba</small></div><div class="gtrack" id="gt_gov1"></div></div>
+        <div class="grow"><div class="glbl">Daily standups<small>All</small></div><div class="gtrack" id="gt_gov2"></div></div>
+      </div>
+
+      <!-- HIPAA INFRA -->
+      <div class="ggroup">
+        <div class="gglbl">HIPAA Infrastructure</div>
+        <div class="grow"><div class="glbl">Host select + BAA<small>Dulan · Mon-Wed</small></div><div class="gtrack" id="gt_h1"></div></div>
+        <div class="grow"><div class="glbl">Stripe KYC submit<small>Suba · Today</small></div><div class="gtrack" id="gt_h2"></div></div>
+        <div class="grow"><div class="glbl">Staging env live<small>Dulan</small></div><div class="gtrack" id="gt_h3"></div></div>
+        <div class="grow"><div class="glbl">3rd-party audit<small>Dulan</small></div><div class="gtrack" id="gt_h4"></div></div>
+      </div>
+
+      <!-- QUALIPHY -->
+      <div class="ggroup">
+        <div class="gglbl">Qualiphy Integration</div>
+        <div class="grow"><div class="glbl">API access + test run<small>Dulan · Mon</small></div><div class="gtrack" id="gt_q1"></div></div>
+        <div class="grow"><div class="glbl">Integration build<small>Dulan</small></div><div class="gtrack" id="gt_q2"></div></div>
+        <div class="grow"><div class="glbl">Webhook handler<small>Dulan</small></div><div class="gtrack" id="gt_q3"></div></div>
+        <div class="grow"><div class="glbl">Sandbox E2E test<small>Dulan · ends May 22</small></div><div class="gtrack" id="gt_q4"></div></div>
+      </div>
+
+      <!-- WEBSITE -->
+      <div class="ggroup">
+        <div class="gglbl">Website / Content</div>
+        <div class="grow"><div class="glbl">Site replication<small>WP dev — already started</small></div><div class="gtrack" id="gt_w1"></div></div>
+        <div class="grow"><div class="glbl">US content updates<small>WP dev + Suba</small></div><div class="gtrack" id="gt_w2"></div></div>
+        <div class="grow"><div class="glbl">Legal pages<small>Warren counsel text → WP dev</small></div><div class="gtrack" id="gt_w3"></div></div>
+        <div class="grow"><div class="glbl">Warren sign-off ◆<small>Gate — by May 22</small></div><div class="gtrack" id="gt_w4"></div></div>
+      </div>
+
+      <!-- CUSTOM FORM -->
+      <div class="ggroup">
+        <div class="gglbl">Custom Consultation Form (10QBIT builds)</div>
+        <div class="grow"><div class="glbl">Competitor research<small>Suba · Mon-Wed</small></div><div class="gtrack" id="gt_f1"></div></div>
+        <div class="grow"><div class="glbl">Gap analysis + spec<small>Suba</small></div><div class="gtrack" id="gt_f2"></div></div>
+        <div class="grow"><div class="glbl">Form build + consent<small>Dulan · Wed–Fri, Mon–Fri</small></div><div class="gtrack" id="gt_f3"></div></div>
+        <div class="grow"><div class="glbl">Qualiphy field mapping<small>Dulan</small></div><div class="gtrack" id="gt_f4"></div></div>
+        <div class="grow"><div class="glbl">Internal sign-off ◆<small>May 22</small></div><div class="gtrack" id="gt_f5"></div></div>
+      </div>
+
+      <!-- PAYMENT -->
+      <div class="ggroup">
+        <div class="gglbl">Payment — Stripe US</div>
+        <div class="grow"><div class="glbl">Stripe US config<small>Dulan</small></div><div class="gtrack" id="gt_p1"></div></div>
+        <div class="grow"><div class="glbl">Payment integration<small>Dulan</small></div><div class="gtrack" id="gt_p2"></div></div>
+        <div class="grow"><div class="glbl">Payment testing<small>Dulan · ends May 22</small></div><div class="gtrack" id="gt_p3"></div></div>
+      </div>
+
+      <!-- SYSTEM TARGET LINE + BUFFER -->
+      <div class="ggroup">
+        <div class="gglbl">QA · Buffer · Go-Live</div>
+        <div class="grow"><div class="glbl">Test plan<small>Suba</small></div><div class="gtrack" id="gt_qa1"></div></div>
+        <div class="grow"><div class="glbl">Full QA + security scan<small>Suba + Dulan · May 26–29</small></div><div class="gtrack" id="gt_qa2"></div></div>
+        <div class="grow"><div class="glbl">UAT — Warren + Sanj ◆<small>May 27–29</small></div><div class="gtrack" id="gt_qa3"></div></div>
+        <div class="grow"><div class="glbl">Go/No-Go ◆<small>May 29 — Sanj, Warren, Suba</small></div><div class="gtrack" id="gt_go1"></div></div>
+        <div class="grow"><div class="glbl">DNS + launch<small>Dulan · June 1 (Mon)</small></div><div class="gtrack" id="gt_go2"></div></div>
+      </div>
+
+      <!-- LEGEND -->
+      <div class="gleg">
+        <div class="gli"><div class="gldot" style="background:var(--red)"></div>Urgent</div>
+        <div class="gli"><div class="gldot" style="background:#3b82f6"></div>Infra</div>
+        <div class="gli"><div class="gldot" style="background:#14b8a6"></div>Qualiphy</div>
+        <div class="gli"><div class="gldot" style="background:#a78bfa"></div>Website</div>
+        <div class="gli"><div class="gldot" style="background:#f59e0b"></div>Form</div>
+        <div class="gli"><div class="gldot" style="background:#22c55e"></div>Payment</div>
+        <div class="gli"><div class="gldot" style="background:#f43f5e"></div>QA</div>
+        <div class="gli"><div class="gldot" style="background:var(--orange);box-shadow:0 0 5px rgba(245,158,11,.35)"></div>Gate</div>
+        <div class="gli"><div style="width:18px;height:7px;border:1px dashed rgba(0,229,160,.4);border-radius:2px;background:rgba(0,229,160,.04)"></div>Buffer week</div>
+        <div class="gli"><div style="width:2px;height:14px;background:rgba(0,229,160,.5);box-shadow:0 0 5px rgba(0,229,160,.3)"></div>May 25 system target</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ RISKS ══════════════════ -->
+<div class="pg" id="risks">
+  <div class="eyebrow">Risk Register</div>
+  <div class="pg-title">Identified Risks</div>
+  <div class="pg-sub">8 tracked risks. Assessed from a technology delivery standpoint with weekend schedule factored in.</div>
+  <div class="card">
+    <table class="rt">
+      <thead><tr><th>ID</th><th>Risk</th><th>Prob</th><th>Impact</th><th>Owner</th><th>Mitigation</th></tr></thead>
+      <tbody>
+        <tr><td class="rid">R01</td><td style="font-weight:600">Qualiphy API issues</td><td><span class="pp pl">Low</span></td><td><span class="chip crit">Critical</span></td><td style="font-family:'JetBrains Mono',monospace;font-size:9px;white-space:nowrap">Dulan / Suba</td><td style="color:#94a3b8">API is clean and well-documented. Dulan validates in sandbox Monday May 11 — 2 hours max. Test mode covers all scenarios. Risk is low but must be confirmed today.</td></tr>
+        <tr><td class="rid">R02</td><td style="font-weight:600">Qualiphy commercial deal delayed past May 14</td><td><span class="pp ph">High</span></td><td><span class="chip crit">Critical</span></td><td style="font-family:'JetBrains Mono',monospace;font-size:9px;white-space:nowrap">Sanj</td><td style="color:#94a3b8">Sandbox continues while negotiating. Production access needed by May 18. If deal slips past May 18 — scope down to MVP launch (fewer states, waitlist mode).</td></tr>
+        <tr><td class="rid">R03</td><td style="font-weight:600">HIPAA hosting delayed</td><td><span class="pp pm">Medium</span></td><td><span class="chip crit">Critical</span></td><td style="font-family:'JetBrains Mono',monospace;font-size:9px;white-space:nowrap">Dulan</td><td style="color:#94a3b8">AWS us-east-1 and Azure East US both offer standard BAA with same-day setup. Dulan provisions Monday May 11 — must be complete by Wed May 13.</td></tr>
+        <tr><td class="rid">R04</td><td style="font-weight:600">Stripe US KYC delayed</td><td><span class="pp pm">Medium</span></td><td><span class="chip warn">High</span></td><td style="font-family:'JetBrains Mono',monospace;font-size:9px;white-space:nowrap">Suba</td><td style="color:#94a3b8">Suba submits today (Sunday — Stripe accepts anytime). 3–5 business days = approved by May 14–16. If delayed to May 19+, launch in enquiry-only mode then activate payment post-approval.</td></tr>
+        <tr><td class="rid">R05</td><td style="font-weight:600">Custom form wrong / incomplete for US market</td><td><span class="pp pm">Medium</span></td><td><span class="chip warn">High</span></td><td style="font-family:'JetBrains Mono',monospace;font-size:9px;white-space:nowrap">Suba / Dulan</td><td style="color:#94a3b8">Suba benchmarks 5 competitors May 11–13. Gap analysis complete before Dulan builds. Warren reviews the finished form at UAT — still a clinical check even if he's not building it.</td></tr>
+        <tr><td class="rid">R06</td><td style="font-weight:600">11 working days insufficient for Dulan</td><td><span class="pp pm">Medium</span></td><td><span class="chip warn">High</span></td><td style="font-family:'JetBrains Mono',monospace;font-size:9px;white-space:nowrap">Suba (PM)</td><td style="color:#94a3b8">Qualiphy API is simple — 2–3 days integration. Custom form: 5–6 days. Stripe: 3 days. Infra: 2 days. These can overlap. If Dulan hits risk, Quidget plugin can replace custom API work. MVP scope as fallback.</td></tr>
+        <tr><td class="rid">R07</td><td style="font-weight:600">Security vulnerability found at go-live</td><td><span class="pp pm">Medium</span></td><td><span class="chip crit">Critical</span></td><td style="font-family:'JetBrains Mono',monospace;font-size:9px;white-space:nowrap">Dulan</td><td style="color:#94a3b8">Vulnerability scan during buffer week May 26–28. If critical issues found, go-live is delayed — not negotiable on a HIPAA product. Buffer week exists precisely for this.</td></tr>
+        <tr><td class="rid">R08</td><td style="font-weight:600">Sign-off delays — Warren / Sanj</td><td><span class="pp pvh">Very High</span></td><td><span class="chip warn">High</span></td><td style="font-family:'JetBrains Mono',monospace;font-size:9px;white-space:nowrap">Suba (PM)</td><td style="color:#94a3b8">24-hr SLA agreed at kickoff. All gates calendared with invites. Suba sends review-ready notification ahead of time. Zero scope creep — new requests go post-launch.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════ WORKSTREAMS ══════════════════ -->
+<div class="pg" id="ws">
+  <div class="eyebrow">Delivery Workstreams</div>
+  <div class="pg-title">9 Parallel Tracks</div>
+  <div class="pg-sub">Dulan's tasks scheduled Mon–Fri only. All dates assume May 11 as first working day.</div>
+  <div class="wsgrid" id="wsgrid"></div>
+</div>
+
+<!-- ══════════════════ GO-LIVE CHECKLIST ══════════════════ -->
+<div class="pg" id="checklist">
+  <div class="eyebrow">Launch Gate</div>
+  <div class="pg-title">Go-Live Readiness Checklist</div>
+  <div class="pg-sub">All items confirmed at Go/No-Go meeting May 29 (Fri). DNS cutover on June 1 (Mon) only when all ticked.</div>
+  <div class="card">
+    <div class="pbwrap">
+      <div class="pblbl"><span>Completion</span><span id="pct">0 / 0</span></div>
+      <div class="pbar"><div class="pfill" id="pfill" style="width:0%"></div></div>
+    </div>
+    <div class="clgrid" id="clgrid"></div>
+  </div>
+</div>
+
+<!-- ══════════════════ SWOT ══════════════════ -->
+<div class="pg" id="swot">
+  <div class="eyebrow">Strategic Assessment</div>
+  <div class="pg-title">SWOT Analysis</div>
+  <div class="pg-sub">Technology delivery lens — 10QBIT's perspective.</div>
+  <div class="swot">
+    <div class="swq S"><h3>Strengths</h3><ul>
+      <li>Existing custom codebase — not building from scratch</li>
+      <li>Qualiphy API is simple, clean, well-documented — low integration risk</li>
+      <li>Qualiphy offloads clinical review, prescribing, and dispatch entirely</li>
+      <li>10QBIT owns the full stack — no vendor lock-in</li>
+      <li>Cash-pay model — no insurance billing complexity</li>
+      <li>Buffer week (May 26–June 1) built into the plan as hard contingency</li>
+    </ul></div>
+    <div class="swq W"><h3>Weaknesses</h3><ul>
+      <li>Dulan has only 11 working days to complete all system work</li>
+      <li>Custom consultation form built without clinical input — competitor research only</li>
+      <li>No HIPAA-compliant infrastructure currently — full setup from day one</li>
+      <li>Qualiphy is a single point of failure for clinical approval and dispatch</li>
+      <li>No US brand equity, SEO, or patient base at launch</li>
+    </ul></div>
+    <div class="swq O"><h3>Opportunities</h3><ul>
+      <li>US GLP-1 telehealth market $30B+ and growing rapidly</li>
+      <li>Qualiphy API simplicity means integration risk is very manageable</li>
+      <li>Premium clinical positioning vs Ro, Hims/Hers tech-first approach</li>
+      <li>Buffer week protects quality — no pressure to ship with known issues</li>
+      <li>Replicable 10QBIT template for future US healthcare builds</li>
+    </ul></div>
+    <div class="swq T"><h3>Threats</h3><ul>
+      <li>FDA tightening GLP-1 telehealth rules mid-build</li>
+      <li>Qualiphy state coverage gaps limiting launch geography</li>
+      <li>HIPAA breach — catastrophic legal and reputational exposure</li>
+      <li>Warren / Sanj sign-off delays burning into buffer week</li>
+      <li>Scope creep from Warren or Sanj after build has started</li>
+    </ul></div>
+  </div>
+</div>
+
+<script>
+// ── NAV
+function go(id, btn) {
+  document.querySelectorAll('.pg').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  btn.classList.add('on');
+}
+
+// ── COUNTDOWN (auto-calculates daily)
+(function(){
+  const d = Math.max(0, Math.ceil((new Date('2026-06-01') - new Date()) / 86400000));
+  document.getElementById('cd').textContent = d;
+  document.getElementById('stat-days').textContent = d;
+})();
+
+// ── GANTT ENGINE
+// 24 days: D0=May9(Sat) … D23=Jun1(Mon)
+// Weekends: D0,D1,D7,D8,D14,D15,D21,D22
+const TOTAL = 24;
+const WKENDS = new Set([0,1,7,8,14,15,21,22]);
+const DAY_LABELS = [
+  'May 9','May 10','May 11','May 12','May 13','May 14','May 15',
+  'May 16','May 17','May 18','May 19','May 20','May 21','May 22',
+  'May 23','May 24','May 25','May 26','May 27','May 28','May 29',
+  'May 30','May 31','Jun 1'
+];
+const DAY_SHORT = [
+  'Sa','Su','Mo','Tu','We','Th','Fr',
+  'Sa','Su','Mo','Tu','We','Th','Fr',
+  'Sa','Su','Mo','Tu','We','Th','Fr',
+  'Sa','Su','Mo'
+];
+// Today = D1 (May 10, Sun)
+const TODAY_D = 1;
+// System target = D16 (May 25, Mon)
+const TARGET_D = 16;
+// Buffer starts D17 (May 26)
+const BUFFER_D = 17;
+
+// Build day headers
+const dh = document.getElementById('dayheaders');
+for (let i = 0; i < TOTAL; i++) {
+  const d = document.createElement('div');
+  d.className = 'gday' + (WKENDS.has(i) ? ' wk' : '') + (i === TODAY_D ? ' today' : '');
+  d.innerHTML = `<div>${DAY_SHORT[i]}</div><div style="font-size:8px">${DAY_LABELS[i].split(' ')[1]}</div>`;
+  dh.appendChild(d);
+}
+
+// Helper: pct from day index
+const pct = d => (d / TOTAL * 100).toFixed(2) + '%';
+const wid = (s, e) => ((e - s) / TOTAL * 100).toFixed(2) + '%';
+
+// Add weekend shading + buffer zone + markers to a track
+function setupTrack(el) {
+  // weekend shades
+  WKENDS.forEach(d => {
+    const sh = document.createElement('div');
+    sh.className = 'gwkshade';
+    sh.style.cssText = `left:${pct(d)};width:${wid(d, d+1)}`;
+    el.appendChild(sh);
+  });
+  // buffer zone
+  const buf = document.createElement('div');
+  buf.className = 'buf-overlay';
+  buf.style.cssText = `left:${pct(BUFFER_D)};right:0`;
+  el.appendChild(buf);
+}
+
+// Draw a bar on a track element
+function bar(trackId, start, end, cls, tooltip) {
+  const el = document.getElementById(trackId);
+  if (!el) return;
+  setupTrack(el);
+  // system target line
+  const tl = document.createElement('div');
+  tl.className = 'vmark target';
+  tl.style.left = pct(TARGET_D);
+  tl.title = 'System complete target: May 25';
+  el.appendChild(tl);
+  // the bar
+  const b = document.createElement('div');
+  b.className = `bar ${cls}`;
+  b.style.left = pct(start);
+  b.style.width = wid(start, end);
+  if (tooltip) b.title = tooltip;
+  el.appendChild(b);
+}
+
+// Bars — (trackId, startDay, endDay, class, tooltip)
+// Governance
+bar('gt_gov1', 1, 4, 'urgent', 'Kickoff + scope lock: May 10–12');
+bar('gt_gov2', 1, 23, 'qa', ''); // continuous thin standup line — overridden
+(function(){
+  const el = document.getElementById('gt_gov2');
+  setupTrack(el);
+  const tl = document.createElement('div');
+  tl.className = 'vmark target'; tl.style.left = pct(TARGET_D); el.appendChild(tl);
+  const b = document.createElement('div');
+  b.className = 'bar';
+  b.style.cssText = `left:${pct(1)};width:${wid(1,23)};background:rgba(255,255,255,.08);height:5px;top:7px`;
+  el.appendChild(b);
+})();
+
+// Infra
+bar('gt_h1', 2, 5,  'infra',  'Host + BAA: May 11–14 (Mon–Thu)');
+bar('gt_h2', 1, 5,  'urgent', 'Stripe KYC: submit today, processing until ~May 14');
+bar('gt_h3', 4, 7,  'infra',  'Staging env: May 13–15');
+bar('gt_h4', 5, 10, 'infra',  'HIPAA 3rd-party audit: May 14–19');
+
+// Qualiphy
+bar('gt_q1', 2, 3,  'urgent', 'API access + test: May 11–12 (Mon–Tue)');
+bar('gt_q2', 4, 11, 'q',      'Integration build: May 13–20 (skips weekend)');
+bar('gt_q3', 9, 13, 'q',      'Webhook handler: May 18–22');
+bar('gt_q4', 11,14, 'q',      'Sandbox E2E test: May 20–22');
+
+// Website
+bar('gt_w1', 2, 7,  'wp',  'Site replication: May 11–15');
+bar('gt_w2', 4, 12, 'wp',  'US content updates: May 13–21');
+bar('gt_w3', 9, 14, 'wp',  'Legal pages: May 18–22');
+bar('gt_w4', 13,16, 'ms',  'Warren sign-off gate: May 22–25');
+
+// Custom form
+bar('gt_f1', 2, 5,  'form',   'Competitor research: May 11–13 (Suba)');
+bar('gt_f2', 4, 7,  'form',   'Gap analysis + spec: May 13–15 (Suba)');
+bar('gt_f3', 6, 13, 'form',   'Form build: May 15–22 (Dulan, skips weekend)');
+bar('gt_f4', 9, 13, 'form',   'Qualiphy field mapping: May 18–22 (Dulan)');
+bar('gt_f5',13, 16, 'ms',     'Internal sign-off: May 22–25');
+
+// Payment
+bar('gt_p1', 5, 9,  'pay',  'Stripe US config: May 14–18');
+bar('gt_p2', 9, 13, 'pay',  'Payment integration: May 18–22');
+bar('gt_p3',11, 14, 'pay',  'Payment testing: May 20–22');
+
+// QA / buffer
+bar('gt_qa1', 9,  13, 'qa',    'Test plan: May 18–22 (Suba)');
+bar('gt_qa2', 17, 21, 'qa',    'Full QA + security scan: May 26–29');
+bar('gt_qa3', 18, 21, 'ms',    'UAT — Warren + Sanj: May 27–29');
+bar('gt_go1', 20, 21, 'ms',    'Go/No-Go: May 29 (Fri)');
+bar('gt_go2', 23, 24, 'go',    'DNS cutover + launch: June 1 (Mon)');
+
+// Add launch line to all tracks (just the last one for cleanliness)
+(function(){
+  const el = document.getElementById('gt_go2');
+  const ll = document.createElement('div');
+  ll.className = 'vmark launch';
+  ll.style.left = pct(23);
+  ll.title = 'June 1 — Launch';
+  el.appendChild(ll);
+})();
+
+// ── WORKSTREAMS DATA
+const WS = [
+  { title:'Kickoff & Governance', owner:'Suba (PM)', color:'#94a3b8', tasks:[
+    {t:'Schedule kickoff — Sanj, Warren, Dulan', d:'Mon May 11', p:'urgent'},
+    {t:'RACI matrix — who decides, does, consults', d:'Mon May 11', p:'urgent'},
+    {t:'Lock scope + out-of-scope with all parties', d:'Mon May 11', p:'urgent'},
+    {t:'Agree 24-hr sign-off SLA with Warren + Sanj', d:'Mon May 11', p:'urgent'},
+    {t:'Set up project board (Jira / Notion)', d:'Mon May 11', p:'info'},
+    {t:'Pre-agree MVP contingency scope', d:'Mon May 11', p:'info'},
+    {t:'Daily 15-min standup — mandatory, Mon–Fri', d:'Daily', p:'info'},
+  ]},
+  { title:'HIPAA Infrastructure', owner:'Dulan — Mon–Fri only', color:'#3b82f6', tasks:[
+    {t:'Select US HIPAA host — AWS us-east-1 or Azure East US', d:'Mon May 11', p:'urgent'},
+    {t:'Provision staging + production (US data region only)', d:'Mon–Wed May 11–13', p:'urgent'},
+    {t:'Execute BAA with host — zero PHI before this is signed', d:'Tue–Wed May 12–13', p:'urgent'},
+    {t:'US domain + SSL certificates', d:'Tue–Thu May 12–14', p:'info'},
+    {t:'Staging environment ready for deployment', d:'Wed–Thu May 13–14', p:'info'},
+    {t:'Audit all 3rd-party services for US data residency', d:'Thu–Mon May 14–18', p:'info'},
+    {t:'HIPAA-compliant email service + BAA', d:'Thu–Tue May 14–19', p:'info'},
+  ]},
+  { title:'Qualiphy Integration', owner:'Dulan — Mon–Fri only', color:'#14b8a6', tasks:[
+    {t:'Sign up to app.qualiphy.me → get API key', d:'Mon May 11 (morning)', p:'urgent'},
+    {t:'Run /exam_list → identify GLP-1 exam IDs', d:'Mon May 11', p:'urgent'},
+    {t:'Test invite: state "TE", name "Test Approve" → validate webhook', d:'Mon–Tue May 11–12', p:'urgent'},
+    {t:'Request Qualiphy state coverage list', d:'Mon May 11', p:'urgent'},
+    {t:'Gate: commercial plan signed', d:'Wed May 14', p:'gate'},
+    {t:'Build /exam_invite integration + custom form data mapping', d:'Wed–Fri May 13–15, Mon–Thu 18–21', p:'info'},
+    {t:'Webhook handler — approved / rejected / dispatched', d:'Mon–Thu May 18–21', p:'info'},
+    {t:'Patient status notifications (email on approval / rejection)', d:'Tue–Thu May 19–21', p:'info'},
+    {t:'Full sandbox E2E test — all test name scenarios', d:'Wed–Fri May 20–22', p:'info'},
+  ]},
+  { title:'Website / Content', owner:'WP dev + Suba', color:'#a78bfa', tasks:[
+    {t:'Site replication to US staging — already started', d:'May 11–15', p:'info'},
+    {t:'US content brief — full list of what must change', d:'Wed–Thu May 13–14 (Suba)', p:'info'},
+    {t:'Remove all UK content (NHS, MHRA, UK pricing)', d:'May 13–16', p:'info'},
+    {t:'US medications page — per Warren legal output', d:'May 15–20', p:'info'},
+    {t:'State availability + geo-restriction page', d:'May 19–22', p:'info'},
+    {t:'Legal pages — text from Warren\'s counsel, implemented by WP dev', d:'May 18–22', p:'info'},
+    {t:'Gate: Warren sign-off on all content — by May 22', d:'May 22–25', p:'gate'},
+  ]},
+  { title:'Custom Consultation Form (10QBIT)', owner:'Suba research → Dulan build', color:'#f59e0b', tasks:[
+    {t:'Suba: research Ro, Hims/Hers, Found, Henry Meds, Sequence forms', d:'Mon–Wed May 11–13', p:'urgent'},
+    {t:'Extract standard US GLP-1 question set', d:'Tue–Wed May 12–13', p:'urgent'},
+    {t:'Gap analysis: UK custom form vs US competitor standard', d:'Wed–Thu May 13–14', p:'urgent'},
+    {t:'Spec doc: questions to add, change, remove — handed to Dulan', d:'Thu May 14 (Suba)', p:'info'},
+    {t:'Dulan: implement updated question set in custom form', d:'Fri–Thu May 15–21', p:'info'},
+    {t:'State selection question → geo-blocks unsupported states', d:'Mon–Tue May 18–19', p:'info'},
+    {t:'Informed consent capture + logging in consultation flow', d:'Mon–Tue May 18–19', p:'info'},
+    {t:'Map every form field → Qualiphy /exam_invite payload', d:'Wed–Fri May 20–22', p:'info'},
+    {t:'Gate: Suba internal sign-off → Warren review at UAT', d:'Fri May 22', p:'gate'},
+  ]},
+  { title:'Payment — Stripe US', owner:'Suba (KYC) + Dulan (build)', color:'#22c55e', tasks:[
+    {t:'Suba: submit Stripe US KYC — TODAY (Sunday)', d:'Sun May 10 — today', p:'urgent'},
+    {t:'Stripe US configured for USD + confirm payment methods', d:'Thu–Mon May 14–18', p:'info'},
+    {t:'Agree order of operations: payment before or after Qualiphy push', d:'Thu May 14', p:'info'},
+    {t:'Integrate Stripe payment into custom consultation flow', d:'Mon–Thu May 18–21', p:'info'},
+    {t:'Stripe webhook → triggers Qualiphy exam_invite on payment success', d:'Mon–Thu May 18–21', p:'info'},
+    {t:'Test: success, card decline, refund, webhook failure', d:'Wed–Fri May 20–22', p:'info'},
+    {t:'Refund / cancellation policy implemented', d:'Mon–Wed May 18–20', p:'info'},
+  ]},
+  { title:'QA, Testing & Security', owner:'Suba + Dulan — buffer week', color:'#f43f5e', tasks:[
+    {t:'Test plan written — all flows, edge cases, error states', d:'Mon–Thu May 18–21 (Suba)', p:'info'},
+    {t:'System complete target — all dev done by EOD May 25', d:'Mon May 25', p:'gate'},
+    {t:'Full E2E test: landing → form → payment → Qualiphy → webhook', d:'Tue–Thu May 26–28', p:'info'},
+    {t:'Edge cases: rejected form, payment fail, unsupported state, API error', d:'Tue–Thu May 26–28', p:'info'},
+    {t:'Cross-browser + mobile testing', d:'Tue–Wed May 26–27', p:'info'},
+    {t:'Security: encryption, API keys in env vars, HIPAA audit logs', d:'Wed–Thu May 27–28', p:'info'},
+    {t:'Vulnerability scan / pen test — non-negotiable before go-live', d:'Wed–Thu May 27–28', p:'info'},
+    {t:'Gate: UAT — Warren + Sanj full journey walkthrough', d:'Thu May 28–Fri May 29', p:'gate'},
+    {t:'P1/P2 bug fixes + regression test', d:'Fri May 29', p:'info'},
+  ]},
+  { title:'Go-Live & Hypercare', owner:'Suba + Dulan', color:'#10b981', tasks:[
+    {t:'Gate: Go/No-Go decision — Sanj, Warren, Suba, Dulan', d:'Fri May 29', p:'gate'},
+    {t:'Incident response runbook documented', d:'Thu–Fri May 28–29', p:'info'},
+    {t:'Uptime monitoring + alerting configured', d:'Fri May 29', p:'info'},
+    {t:'DNS cutover to production', d:'Mon Jun 1 (morning)', p:'info'},
+    {t:'Production smoke test — full E2E in live environment', d:'Mon Jun 1', p:'info'},
+    {t:'Dulan on 48-hour hypercare standby post-launch', d:'Jun 1–2', p:'info'},
+    {t:'Handover docs to Warren / Harley team', d:'Fri May 29 – Mon Jun 1', p:'info'},
+  ]},
+];
+
+const CM = { urgent:'<span class="chip crit">URGENT</span>', gate:'<span class="chip gate">GATE</span>', info:'<span class="chip info">HIGH</span>' };
+const wsg = document.getElementById('wsgrid');
+WS.forEach((ws, i) => {
+  const tasks = ws.tasks.map(t => `<div class="wstask">${CM[t.p]||''}<span class="wtxt">${t.t}</span><span class="wtime">${t.d}</span></div>`).join('');
+  wsg.innerHTML += `<div class="ws" id="ws${i}">
+    <div class="wsstripe" style="background:${ws.color}"></div>
+    <div class="wshead" onclick="tws(${i})">
+      <div><h3>${ws.title}</h3><div class="wsmeta">${ws.owner} &nbsp;·&nbsp; ${ws.tasks.length} tasks</div></div>
+      <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="wsbody">${tasks}</div>
+  </div>`;
+});
+function tws(i) { document.getElementById('ws'+i).classList.toggle('open'); }
+
+// ── CHECKLIST
+const CL = [
+  { cat:'Infrastructure', items:['US HIPAA-compliant hosting live + verified','BAA signed with hosting provider','All 3rd-party services confirmed US data region','HIPAA email service with BAA configured','US domain + SSL active on production'] },
+  { cat:'Qualiphy', items:['Commercial agreement signed','Production API credentials in place (not sandbox)','Patient data push tested in production','Webhooks (approved/rejected/dispatched) working in prod','Error handling + alerting active'] },
+  { cat:'Custom Form', items:['Competitor research complete — question set finalised','US questions implemented in custom form','State geo-restriction active and tested','Informed consent captured and logged','Qualiphy field mapping validated E2E','Warren reviewed the final form'] },
+  { cat:'Website', items:['All UK references removed','US medications page live','Legal pages live (HIPAA Privacy Policy, T&Cs)','Warren content sign-off received','State availability page + geo-block working'] },
+  { cat:'Payment', items:['Stripe US KYC fully approved','USD payment tested in production','Card decline + refund flows tested','Stripe webhooks confirmed in production'] },
+  { cat:'QA & Security', items:['All P1/P2 bugs resolved + regression tested','Vulnerability scan complete — no critical findings','HIPAA audit logging confirmed active','Cross-browser + mobile tested','UAT signed off by Warren and Sanj'] },
+  { cat:'Go-Live', items:['Go/No-Go agreed by Sanj, Warren, Suba, Dulan','Production smoke test (full E2E) complete','Uptime monitoring + alerting active','Incident runbook documented','Dulan hypercare confirmed for Jun 1–2'] },
+];
+let tot = 0;
+const clg = document.getElementById('clgrid');
+CL.forEach(cat => {
+  let h = `<div class="clcat"><h3>${cat.cat}</h3>`;
+  cat.items.forEach((item, j) => {
+    tot++;
+    const id = `cl_${cat.cat.replace(/\W/g,'')}_${j}`;
+    h += `<div class="cli"><input type="checkbox" id="${id}" onchange="updProg()"><label for="${id}">${item}</label></div>`;
+  });
+  h += '</div>';
+  clg.innerHTML += h;
+});
+function updProg() {
+  const chk = document.querySelectorAll('#clgrid input:checked').length;
+  const p = Math.round(chk / tot * 100);
+  document.getElementById('pct').textContent = `${chk} / ${tot} (${p}%)`;
+  document.getElementById('pfill').style.width = p + '%';
+}
+updProg();
+</script>
+</body>
+</html>
